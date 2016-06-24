@@ -22,18 +22,18 @@ str(df2)             # checking data type in df2
 # RESULTS AND DISCUSSIONS
 ## Compute correl matrix based on df2
 df2 <- as.matrix(df2[,2:15])
-install.packages("Hmisc")
 
 ### using Hmisc
+install.packages("Hmisc")
 library(Hmisc)
 correl <- rcorr(df2)            # making correl matrix
 correl
 
 ## visualise correl matrix
 ### using PerformanceAnalytics
-install.packages("PerformanceAnalytics")
+install.packages("PerformanceAnalytics")    
 library(PerformanceAnalytics)
-chart.Correlation(df2, histogram=TRUE, pch=19)
+chart.Correlation(df2, histogram=TRUE, pch=19) # visual PA
 
 
 ## using ggcorrplot
@@ -46,24 +46,37 @@ head(p.mat[, 1:14])             # view headers
 ggcorrplot(correl)              # making heatmap
 
 ## HCA
-devtools::install_github("kassambara/factoextra")
+install.packages("devtools")
+library(devtools)
+install.packages("factoextra")
+install_github("kassambara/factoextra")
 install.packages("cluster")
 library(cluster)
 library(factoextra)
 
 ### k means method
-kmeans(df2, centers, iter.max = 10, nstart = 1)
-km2 <- kmeans(df2, 2, nstart = 25)
-km3 <- kmeans(df2, 3, nstart = 25)
-km2$cluster                     # extracting cluster number
-km2$centers                     # extracting cluster means (or centers)
-plotkm2 <- plot(df2, col = km2$cluster, pch = 19, frame = FALSE,
-     main = "K-means with k = 2")
-points(km2$centers, col = 1:2, pch = 8, cex = 3)
+km2 <- kmeans(df2, 2, nstart = 25) # kmeans with 2 centers
+km3 <- kmeans(df2, 3, nstart = 25) # kmeans with 3 centers
+km2$cluster                        # extracting cluster number
+km2$centers                        # extracting cluster means (or centers)
+plotkm2 <- plot(df2, 
+                col = km2$cluster, 
+                pch = 19, 
+                frame = T,
+                main = "K-means with k = 2") # notes: need longer axis x 
+points(km2$centers, 
+       col = 1:2, 
+       pch = 8, cex = 3)
 
 km3$cluster                     # extracting cluster number
 km3$centers                     # extracting cluster means (or centers)
-plotkm3 <- plot(df2, col = km3$cluster, pch = 19, frame = FALSE,
-     main = "K-means with k = 3")
-points(km3$centers, col = 1:2, pch = 8, cex = 3)
+plotkm3 <- plot(df2, 
+                col = km3$cluster, 
+                pch = 19, 
+                frame = T,
+                main = "K-means with k = 3")
+points(km3$centers, 
+       col = 1:2, 
+       pch = 8, 
+       cex = 3)
 

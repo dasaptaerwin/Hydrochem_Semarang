@@ -80,3 +80,26 @@ points(km3$centers,
        pch = 8, 
        cex = 3)
 
+### evaluating cluster
+df2 <- scale(df2)
+head(df2)
+fviz_nbclust(df2, 
+             kmeans, method = "wss") +
+             geom_vline(xintercept = 4, 
+                        linetype = 2)   # determining optimal no cluster
+km4.res <- kmeans(df2, 4, nstart = 25)  # running kmeans with 4 cluster
+print(km4.res)                          # print output
+fviz_cluster(km4.res, data = df2)       # vis output
+
+pam.res <- pam(scale(df2), 4)           # running pam cluster with 4 cluster
+pam.res$medoids                         # extract medoids
+clusplot(pam.res, 
+         main = "Cluster plot, k = 4", 
+         color = TRUE)
+plot(silhouette(pam.res),  col = 2:5) 
+fviz_silhouette(silhouette(pam.res)) 
+clarax <- clara(df2, 4, samples = 5)    # using clara method
+fviz_cluster(clarax, 
+             stand = FALSE, 
+             geom = "point",
+             pointsize = 1)

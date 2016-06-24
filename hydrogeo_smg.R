@@ -17,7 +17,10 @@ rownames(df2) <- df2$location # setting col location as row names
 str(df2)             # checking data type in df2 
 
 ## Data analysis
-
+### Cluster analysis
+### PCA
+### Multiregress
+### Spatial
 
 # RESULTS AND DISCUSSIONS
 ## Compute correl matrix based on df2
@@ -45,11 +48,11 @@ p.mat <- cor_pmat(df2)          # compute p-values
 head(p.mat[, 1:14])             # view headers
 ggcorrplot(correl)              # making heatmap
 
-## HCA
+## CLUSTER ANALYSIS
 install.packages("devtools")
 library(devtools)
 install.packages("factoextra")
-install_github("kassambara/factoextra")
+#install_github("kassambara/factoextra")
 install.packages("cluster")
 library(cluster)
 library(factoextra)
@@ -85,21 +88,72 @@ df2 <- scale(df2)
 head(df2)
 fviz_nbclust(df2, 
              kmeans, method = "wss") +
-             geom_vline(xintercept = 4, 
+             geom_vline(xintercept = 3, 
                         linetype = 2)   # determining optimal no cluster
-km4.res <- kmeans(df2, 4, nstart = 25)  # running kmeans with 4 cluster
-print(km4.res)                          # print output
-fviz_cluster(km4.res, data = df2)       # vis output
+km3.res <- kmeans(df2, 3, nstart = 25)  # running kmeans with 4 cluster
+print(km3.res)                          # print output
+fviz_cluster(km3.res, data = df2)       # vis output
 
-pam.res <- pam(scale(df2), 4)           # running pam cluster with 4 cluster
+pam.res <- pam(scale(df2), 3)           # running pam cluster with 3 cluster
 pam.res$medoids                         # extract medoids
 clusplot(pam.res, 
-         main = "Cluster plot, k = 4", 
+         main = "Cluster plot, k = 3", 
          color = TRUE)
 plot(silhouette(pam.res),  col = 2:5) 
 fviz_silhouette(silhouette(pam.res)) 
-clarax <- clara(df2, 4, samples = 5)    # using clara method
+clarax <- clara(df2, 3, samples = 5)    # using clara method
 fviz_cluster(clarax, 
              stand = FALSE, 
-             geom = "point",
+             geom = "point", 
+             label=T,
              pointsize = 1)
+
+### HCA
+distdf2.res <- dist(df2, 
+                    method = "euclidean")
+hcadf2 <- hclust(distdf2.res, 
+                 method = "complete")
+plot(hcadf2, 
+     hang = -1)       # dendogram vis
+rect.hclust(hcadf2, 
+            k = 3, 
+            border = 2:4) # dendogram vis with grouping
+
+### using nbclust pack to evaluate no of cluster
+install.packages("NbClust") # for more precise no of cluster
+library("NbClust")
+resdf2.nb <- NbClust(df2, 
+                     distance = "euclidean",
+                     min.nc = 2, max.nc = 10, 
+                     method = "complete", 
+                     index ="gap") 
+resdf2.nb # print the results
+
+# All gap statistic values
+resdf2.nb$All.index
+
+# Best number of clusters
+resdf2.nb$Best.nc
+
+# Best partition
+resdf2.nb$Best.partition
+nbdf2 <- NbClust(df2, 
+                 distance = "euclidean", 
+                 min.nc = 2,
+                 max.nc = 10, 
+                 method = "complete", 
+                 index ="all")
+nbdf2
+fviz_nbclust(nbdf2) + theme_minimal()
+dev.off()
+
+
+distdf2.res <- dist(df2, 
+                    method = "euclidean")
+hcadf2 <- hclust(distdf2.res, 
+                 method = "complete")
+plot(hcadf2, 
+     hang = -1)           # dendogram vis
+rect.hclust(hcadf2, 
+            k = 2, 
+            border = 2:4) # dendogram vis with grouping

@@ -127,16 +127,10 @@ resdf2.nb <- NbClust(df2,
                      min.nc = 2, max.nc = 10, 
                      method = "complete", 
                      index ="gap") 
-resdf2.nb # print the results
-
-# All gap statistic values
-resdf2.nb$All.index
-
-# Best number of clusters
-resdf2.nb$Best.nc
-
-# Best partition
-resdf2.nb$Best.partition
+resdf2.nb                 # print the results
+resdf2.nb$All.index       # All gap statistic values
+resdf2.nb$Best.nc         # Best number of clusters
+resdf2.nb$Best.partition  # calculate best partition
 nbdf2 <- NbClust(df2, 
                  distance = "euclidean", 
                  min.nc = 2,
@@ -145,9 +139,8 @@ nbdf2 <- NbClust(df2,
                  index ="all")
 nbdf2
 fviz_nbclust(nbdf2) + theme_minimal()
-dev.off()
-
-
+#dev.off()                # delete the '#' sign whenever 
+                          # you want to clean the plot screen
 distdf2.res <- dist(df2, 
                     method = "euclidean")
 hcadf2 <- hclust(distdf2.res, 
@@ -157,3 +150,118 @@ plot(hcadf2,
 rect.hclust(hcadf2, 
             k = 2, 
             border = 2:4) # dendogram vis with grouping
+
+### Multiple regression for variable selection
+#### using base package
+# compare models
+fit1 <- lm(tds ~ wat_level+
+              elev+
+              ph+
+              k+
+              ca+
+              mg+
+              na+
+              so4+
+              cl+
+              hco3, data=df2)
+step(fit1)                # stepwise regression
+fit2 <- glm(tds ~ wat_level+
+             elev+
+             ph+
+             k+
+             ca+
+             mg+
+             na+
+             so4+
+             cl+
+             hco3, data=df2) 
+#family=binomial)
+step(fit2,
+     direction="backward",
+     k=2)    
+
+
+
+#### using MASS
+library(MASS)
+fit <- lm(tds ~ wat_level+
+             elev+
+             ph+
+             k+
+             ca+
+             mg+
+             na+
+             so4+
+             cl+
+             hco3, data=df2)
+lm$coefficients
+step <- stepAIC(lm, direction="both")
+step$anova # display results 
+
+#### using randomforest
+install.packages("randomForest")
+library(randomForest)
+rfModel <- randomForest(tds ~ wat_level+
+                          elev+
+                          ph+
+                          k+
+                          ca+
+                          mg+
+                          na+
+                          so4+
+                          cl+
+                          hco3, data=df2, 
+                         ntree = 500, 
+                         mtry = 2,
+                         importance = TRUE,
+                         do.trace = 100, 
+                         proximity=TRUE)
+print(rfModel)
+plot(rfModel)
+
+
+(round(importance(rfModel), 3))
+varImpPlot(rfModel,type=2)
+dev.off()
+
+#### using caret
+install.packages("caret")
+library(caret)
+varImp(caret)
+install.packages("pbkrtest")
+
+#### using rpart
+install.packages("rpart")
+library(rpart)
+fit <- rpart(tds ~ wat_level+
+               elev+
+               ph+
+               k+
+               ca+
+               mg+
+               na+
+               so4+
+               cl+
+               hco3, data=df2)
+plot(fit)
+text(fit)
+
+#### using mgcv
+install.packages("mgcv")
+library(mgcv)
+# example: b<-gam(y~s(x0)+s(x1)+s(x2)+s(x3)+s(x4)+s(x5),data=dat, family=poisson,select=TRUE,method="REML")
+fit.gam <- gam(tds ~ wat_level+
+               elev+
+               ph+
+               k+
+               ca+
+               mg+
+               na+
+               so4+
+               cl+
+               hco3, data=df2,
+           family=gaussian,
+           select=TRUE,
+           method="REML")
+summary(fit.gam)
+plot(fit.gam,all.terms=TRUE, pages=1)

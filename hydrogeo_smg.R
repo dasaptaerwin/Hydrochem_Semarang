@@ -233,6 +233,17 @@ install.packages("pbkrtest")
 #### using rpart
 install.packages("rpart")
 library(rpart)
+install.packages("rattle")
+library(rattle)					# Fancy tree plot
+install.packages("rpart.plot")
+library(rpart.plot)				# Enhanced tree plots
+install.packages("RColorBrewer")
+library(RColorBrewer)				# Color selection for fancy tree plot
+install.packages("party")
+library(party)					# Alternative decision tree algorithm
+install.packages("partykit")
+library(partykit)				# Convert rpart object to BinaryTree
+library(caret)		
 fit <- rpart(tds ~ wat_level+
                elev+
                ph+
@@ -245,11 +256,23 @@ fit <- rpart(tds ~ wat_level+
                hco3, data=df2)
 plot(fit)
 text(fit)
+prp(fit)			
+fancyRpartPlot(fit)		
+fit <- ctree(tds ~ wat_level+
+               elev+
+               ph+
+               k+
+               ca+
+               mg+
+               na+
+               so4+
+               cl+
+               hco3, data=df2)
+plot(fit, main="Conditional Inference Tree")
 
 #### using mgcv
 install.packages("mgcv")
 library(mgcv)
-# example: b<-gam(y~s(x0)+s(x1)+s(x2)+s(x3)+s(x4)+s(x5),data=dat, family=poisson,select=TRUE,method="REML")
 fit.gam <- gam(tds ~ wat_level+
                elev+
                ph+
@@ -262,6 +285,10 @@ fit.gam <- gam(tds ~ wat_level+
                hco3, data=df2,
            family=gaussian,
            select=TRUE,
-           method="REML")
+           method="REML")                     # build gam model
 summary(fit.gam)
-plot(fit.gam,all.terms=TRUE, pages=1)
+plot(fit.gam,all.terms=TRUE, pages=1)         # plot gam results 
+gam.check(fit.gam)                            # check gam model
+
+as.data.frame(pred.tds <- predict(fit.gam))   # predict tds an save in pred.tds data frame. 
+plot(jitter(residuals(fit.gam)) ~ predict(fit.gam)) # plot residuals vs prediction

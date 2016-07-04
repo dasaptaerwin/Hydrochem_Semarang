@@ -15,6 +15,8 @@ str(df2)             # checking data type in df2
 is.numeric(df2)      # checking data type in df2 
 rownames(df2) <- df2$location # setting col location as row names
 str(df2)             # checking data type in df2 
+#install.packages("dplyr")
+#install.packages("piperR")
 
 ## Data analysis
 ### Cluster analysis
@@ -31,6 +33,7 @@ install.packages("Hmisc")
 library(Hmisc)
 correl <- rcorr(df2)            # making correl matrix
 correl
+
 
 ## visualise correl matrix
 ### using PerformanceAnalytics
@@ -139,7 +142,7 @@ nbdf2 <- NbClust(df2,
                  index ="all")
 nbdf2
 fviz_nbclust(nbdf2) + theme_minimal()
-#dev.off()                # delete the '#' sign whenever 
+dev.off()                # delete the '#' sign whenever 
                           # you want to clean the plot screen
 distdf2.res <- dist(df2, 
                     method = "euclidean")
@@ -148,9 +151,73 @@ hcadf2 <- hclust(distdf2.res,
 plot(hcadf2, 
      hang = -1)           # dendogram vis
 rect.hclust(hcadf2, 
-            k = 2, 
+            k = 3, 
             border = 2:4) # dendogram vis with grouping
 
+#### rotating the plot
+
+#### using ape
+# load package ape; remember to install it: install.packages('ape')
+install.packages("ape")
+library(ape)
+plot(as.phylo(hcadf2), 
+     cex = 0.9, 
+     label.offset = 1,
+     type = "unrooted")
+
+### using ggdendro
+install.packages("ggdendro")
+library(ggdendro)
+ggdendrogram(hcadf2, 
+             rotate = TRUE, 
+             size = 4, 
+             theme_dendro = FALSE, 
+             color = "tomato")
+
+source("http://addictedtor.free.fr/packages/A2R/lastVersion/R/code.R")
+op = par(bg = "#EFEFEF")
+A2Rplot(hcadf2, 
+        k = 3, 
+        boxes = FALSE, 
+        col.up = "gray50", 
+        col.down = c("#FF6B6B",     
+                     "#4ECDC4", 
+                     "#556270"))
+                                                                  "#4ECDC4", "#556270"))
+
+## PCA
+
+install.packages("FactoMineR")
+library("FactoMineR")
+library(factoextra)
+res.pca <- PCA(df2, graph = FALSE)
+eigenvalues <- res.pca$eig
+head(eigenvalues[, 1:2])
+barplot(eigenvalues[, 2], names.arg=1:nrow(eigenvalues), 
+        main = "Variances",
+        xlab = "Principal Components",
+        ylab = "Percentage of variances",
+        col ="steelblue")
+# Add connected line segments to the plot
+lines(x = 1:nrow(eigenvalues), eigenvalues[, 2], 
+      type="b", pch=19, col = "red")
+res.pca$var$contrib
+fviz_pca_var(res.pca)
+
+fviz_pca_var(res.pca, col.var="steelblue")+
+  theme_minimal()
+
+res.pca$ind$contrib
+plot(res.pca, choix = "ind")
+
+fviz_pca_biplot(res.pca,  geom = "text")
+
+
+
+
+###########################################################
+###########################################################
+###########################################################
 ### Multiple regression for variable selection
 #### using base package
 # compare models

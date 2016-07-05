@@ -13,4 +13,10 @@ This project will rely mosty on multivariaten analysis:
     + randomForest
 
 # References
-We used various references and resource as the basis of our code, but mostly we gather it up from Github accounts.
+We used various references and resource as the basis of our code, but mostly we gather it up from Github accounts. License: CC-BY.
+
+[![DOI](https://zenodo.org/badge/20095/dasaptaerwin/Hydrochem_Semarang.svg)](https://zenodo.org/badge/latestdoi/20095/dasaptaerwin/Hydrochem_Semarang)
+
+Cite as:
+
+Dasapta Erwin Irawan and Thomas Adi Putranto. (2016). Hydrochem_Semarang: Assessment using R. Zenodo. 10.5281/zenodo.57104

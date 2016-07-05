@@ -1,0 +1,45 @@
+---
+title: 'Data set: Hydrochemical assessment of Semarang groundwater system'
+author: 
+  - name: Thomas Adi Putranto
+    affiliation: Dept of Geology, Faculty of Engineering, Universitas Diponegoro
+  - name: Dasapta Erwin Irawan
+    affiliation: Faculty of Earth Sciences and Technology, Institut Teknologi Bandung
+date: "July 4, 2016"
+output:
+  pdf_document:
+    toc: true
+    highlight: zenburn
+    number_sections: true
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+abstract: 
+    The following paper describes in brief the data set related to our project "Hydrochemical assessment of Semarang Groundwater Quality". All of 58 samples were taken in 2014 using well point data from several reports from Ministry of Energy and Mineral Resources and independent consultant. We provided 20 parameters in each samples (sample id,  coord X, coord Y, well depth, water level, water elevation, TDS, pH, EC, K, Ca, Na, Mg, Cl, SO4, HCO3, year, ion balance, screen location, and chemical facies). The chemical composition were tested in the Water Quality Laboratory, Universitas Diponegoro using mas spectrofotometer method. This data set is the basis of more analysis on our several papers. 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+The following paper describes in brief the data set related to our project "Hydrochemical assessment of Semarang Groundwater Quality".
+
+# Value of the data
+
++ Improvement of a functional annotation of Hordeum vulgare genome draft.
++ This dataset provides the list of all up- and down-regulated genes during one day long desiccation and subsequent re-watering separately in roots and upper part of 4-week-old barley seedlings.
++ Enriched gene ontology (GO) term analysis highlights processes targeted by above mentioned conditions.
++ The dataset can serve as a source of candidate genes for markers used for drought associated studies.
+
+# Data sources and types
+
+All of 58 samples were taken in 2014 using well point data from several reports from Ministry of Energy and Mineral Resources and independent consultant. We provided 20 parameters in each samples (sample id,  coord X, coord Y, well depth, water level, water elevation, TDS, pH, EC, K, Ca, Na, Mg, Cl, SO4, HCO3, year, ion balance, screen location, and chemical facies). The chemical composition were tested in the Water Quality Laboratory, Universitas Diponegoro using mas spectrofotometer method.
+
+# Data distribution
+
+<< insert sample location map >>
+
+
+# References

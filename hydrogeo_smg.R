@@ -165,6 +165,12 @@ plot(as.phylo(hcadf2),
      label.offset = 1,
      type = "unrooted")
 
+plot(as.phylo(hcadf2), 
+     cex = 0.9, 
+     label.offset = 1)
+
+dev.off()
+
 ### using ggdendro
 install.packages("ggdendro")
 library(ggdendro)
